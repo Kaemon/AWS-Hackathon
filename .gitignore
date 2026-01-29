@@ -1,5 +1,13 @@
+# Secrets
+.streamlit/secrets.toml
+secrets.toml
+*.env
+.env
 
-# Elastic Beanstalk Files
-.elasticbeanstalk/*
-!.elasticbeanstalk/*.cfg.yml
-!.elasticbeanstalk/*.global.yml
+# Python
+__pycache__/
+*.pyc
+venv/
+
+# OS
+.DS_Store
