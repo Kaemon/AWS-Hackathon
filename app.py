@@ -29,55 +29,6 @@ chat_css = """
     background-color: #1F2025;
 }
 
-/* Uniform sidebar button styling */
-[data-testid="stSidebar"] .stButton > button {
-    width: 100% !important;
-    height: 45px !important;
-    border-radius: 8px !important;
-    border: none !important;
-    font-size: 14px !important;
-    font-weight: 500 !important;
-    margin-bottom: 8px !important;
-    text-align: center !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%) !important;
-    color: #F0F2F6 !important;
-    transition: all 0.2s ease !important;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
-}
-
-[data-testid="stSidebar"] .stButton > button:hover {
-    background: linear-gradient(135deg, #5a6578 0%, #3d4758 100%) !important;
-    transform: translateY(-1px) !important;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3) !important;
-}
-
-[data-testid="stSidebar"] .stButton > button:active {
-    transform: translateY(0px) !important;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
-}
-
-/* Special styling for crisis hotlines button */
-[data-testid="stSidebar"] .stButton > button:contains("Crisis Hotlines") {
-    background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%) !important;
-}
-
-[data-testid="stSidebar"] .stButton > button:contains("Crisis Hotlines"):hover {
-    background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%) !important;
-}
-
-/* Analyze My Moods button styling */
-[data-testid="stSidebar"] .stButton > button:contains("Analyze My Moods") {
-    background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
-    margin-top: 10px !important;
-}
-
-[data-testid="stSidebar"] .stButton > button:contains("Analyze My Moods"):hover {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
-}
-
 /* Base message container with avatar */
 .chat-container {
     display: flex;
@@ -202,28 +153,14 @@ chat_css = """
     margin: 10px 0;
     box-shadow: 0 4px 8px rgba(255, 68, 68, 0.3);
 }
-
-/* Expander styling for crisis hotlines */
-[data-testid="stSidebar"] .streamlit-expanderHeader {
-    background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%) !important;
-    color: white !important;
-    border-radius: 8px !important;
-    border: none !important;
-    font-weight: 500 !important;
-    padding: 10px 15px !important;
-}
-
-[data-testid="stSidebar"] .streamlit-expanderHeader:hover {
-    background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%) !important;
-}
 </style>
 """
 st.markdown(chat_css, unsafe_allow_html=True)
 
 # --- AWS DynamoDB Configuration ---
 try:
-    aws_access_key_id = os.getenv("AWS_ACCESS_KEY_ID")
-    aws_secret_access_key = os.getenv("AWS_SECRET_ACCESS_KEY")
+    aws_access_key_id = st.secrets["AWS_ACCESS_KEY_ID"]
+    aws_secret_access_key = st.secrets["AWS_SECRET_ACCESS_KEY"]
     dynamodb = boto3.resource(
         'dynamodb',
         aws_access_key_id=aws_access_key_id,
@@ -245,12 +182,12 @@ try:
     genai.configure(api_key=api_key)
 
     # Email configuration - Add better defaults and debugging
-    EMAIL_ADDRESS = os.getenv("EMAIL_ADDRESS", "")
-    EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD", "")
+    EMAIL_ADDRESS = st.secrets.get("EMAIL_ADDRESS", "")
+    EMAIL_PASSWORD = st.secrets.get("EMAIL_PASSWORD", "")
     CRISIS_ALERT_EMAIL = "kaemonng1017@gmail.com"
 
     # Show email config status for debugging (remove in production)
-    if os.getenv("DEBUG_MODE", False):
+    if st.secrets.get("DEBUG_MODE", False):
         st.sidebar.info(f"Email configured: {bool(EMAIL_ADDRESS and EMAIL_PASSWORD)}")
 
 except KeyError:
